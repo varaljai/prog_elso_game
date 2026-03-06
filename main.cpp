@@ -2,17 +2,19 @@
 #include<vector>
 #include<cmath>
 #include<cstdlib>
+#include<iostream>
 
 using namespace genv;
 using namespace std;
 
 const float WINDOW_WIDTH = 1024.;
 const float WINDOW_HEIGHT = 768.;
+const int FRAME_TIME = 16;  // kb 60 fps
 
 void clear() {
     gout << move_to(0, 0);
     gout << color(25, 23, 36);
-    gout << box_to(WINDOW_WIDTH,WINDOW_HEIGHT);
+    gout << box_to(WINDOW_WIDTH-1.,WINDOW_HEIGHT-1.);
 }
 
 struct Vec2 {
@@ -21,6 +23,18 @@ public:
     float y;
 
     Vec2(float x,float y) : x(x), y(y) {}
+
+    Vec2 operator+(const Vec2 &other) {
+        return Vec2(this->x + other.x, this->y + other.y);
+    }
+
+    Vec2 operator-(const Vec2 &other) {
+        return Vec2(this->x - other.x, this->y - other.y);
+    }
+
+    Vec2 operator*(const float &other) {
+        return Vec2(this->x * other, this->y * other);
+    }
 };
 
 
@@ -38,6 +52,31 @@ public:
         gout << color(49, 116, 143);
         gout << box(this->size, this->size);
     }
+
+    void update(float dt) {
+        this->position = this->position + (this->velocity * dt);
+        if (this->position.x + this->size / 2. > WINDOW_WIDTH -1.) {
+            this->velocity.x *= -1.;
+            this->position.x = WINDOW_WIDTH -1. - this->size / 2.;
+        }
+        else if (this->position.x - this->size / 2. < 0.) {
+            this->velocity.x *= -1.;
+            this->position.x = 0. + this->size / 2.;
+
+        }
+
+        if (this->position.y + this->size / 2. > WINDOW_HEIGHT -1.) {
+            this->velocity.y *= -1.;
+            this->position.y = WINDOW_HEIGHT -1. - this->size / 2.;
+        }
+        else if (this->position.y - this->size / 2. < 0.) {
+            this->velocity.y *= -1.;
+            this->position.y = 0. + this->size / 2.;
+        }
+
+
+
+    }
 };
 
 
@@ -49,7 +88,7 @@ struct Model {
         this->balls.push_back(
             Ball(
                 Vec2(WINDOW_WIDTH/2.,WINDOW_HEIGHT/2.),
-                Vec2(0.,0.),
+                Vec2(600.,400.),
                 50.
             )
         );
@@ -66,10 +105,15 @@ public:
         gout.open(WINDOW_WIDTH,WINDOW_HEIGHT);
         gout << font("LiberationSans-Regular.ttf",20);
         gout << refresh;
+        gin.timer(FRAME_TIME);
     }
 
     void event(const event &ev) {
-
+        if (ev.type == ev_timer) {
+            for (Ball &ball : this->model.balls) {
+                ball.update((float)FRAME_TIME / 1000.); // TODO: el lehet e kérni az eltelt időt?
+            }
+        }
 
     }
     void draw() {
@@ -86,15 +130,14 @@ public:
 
 
 
-int main()
-{
+int main() {
     App app = App();
-
     event ev;
-    while(gin >> ev)
-    {
+    while (gin >> ev && ev.keycode != key_escape) {
         app.event(ev);
-        app.draw();
+        if (ev.type == ev_timer) {
+            app.draw();
+        }
     }
     return 0;
 }

@@ -35,6 +35,10 @@ public:
     Vec2 operator*(const float &other) {
         return Vec2(this->x * other, this->y * other);
     }
+
+    float lenght_squared() {
+        return this->x*this->x + this->y*this->y;
+    }
 };
 
 
@@ -43,14 +47,19 @@ private:
     Vec2 position;
     Vec2 velocity;
     float size;
+    bool todo_remove_utkozik;
 
 public:
-    Ball(Vec2 position,Vec2 velocity, float size) : position(position), velocity(velocity), size(size) {}
+    Ball(Vec2 position,Vec2 velocity, float size) : position(position), velocity(velocity), size(size), todo_remove_utkozik(false) {}
 
     void draw() {
         gout << move_to(this->position.x - (this->size/ 2.), this->position.y - (this->size / 2.));
         gout << color(49, 116, 143);
+        if (this->todo_remove_utkozik) {
+            gout << color(235, 111, 146);
+        }
         gout << box(this->size, this->size);
+
     }
 
     void update(float dt) {
@@ -73,8 +82,15 @@ public:
             this->velocity.y *= -1.;
             this->position.y = 0. + this->size / 2.;
         }
-
-
+    }
+    void check_collision_with_balls(Ball &other){
+        if (pow(this->size / 2. + other.size / 2.,2) > (this->position - other.position).lenght_squared() ) {
+            //swap(this->velocity,other.velocity);
+            this->todo_remove_utkozik = true;
+            other.todo_remove_utkozik = true;
+            gout << move_to(this->position.x, this->position.y);
+            cout << this->size / 2 + other.size / 2.<< ' ' << (this->position - other.position).lenght_squared() << endl;
+        }
 
     }
 };
@@ -84,14 +100,15 @@ struct Model {
     vector<Ball> balls;
 
     Model() : balls(vector<Ball>()) {
-
-        this->balls.push_back(
-            Ball(
-                Vec2(WINDOW_WIDTH/2.,WINDOW_HEIGHT/2.),
-                Vec2(600.,400.),
-                50.
-            )
-        );
+        for (int i = 0; 20 > i; i++ ) {
+            this->balls.push_back(
+             Ball(
+                 Vec2((float)(rand()%(int)WINDOW_WIDTH),(float)(rand()%(int)WINDOW_HEIGHT)),
+                 Vec2((float)(rand()%60-30),(float)(rand()%60-30)),
+                 (float)(rand()%15+5)
+             )
+         );
+        }
     }
 };
 
@@ -101,17 +118,26 @@ private:
 
 public:
     App() : model(Model()) {
-
+        srand(time(0));
         gout.open(WINDOW_WIDTH,WINDOW_HEIGHT);
         gout << font("LiberationSans-Regular.ttf",20);
         gout << refresh;
         gin.timer(FRAME_TIME);
+
     }
 
     void event(const event &ev) {
         if (ev.type == ev_timer) {
-            for (Ball &ball : this->model.balls) {
-                ball.update((float)FRAME_TIME / 1000.); // TODO: el lehet e kérni az eltelt időt?
+            for (int i = 0; this->model.balls.size() > i; i++) {
+                Ball &a_ball = this->model.balls[i];
+                a_ball.update((float)FRAME_TIME / 1000.); // TODO: el lehet e kérni az eltelt időt?
+
+
+                for (int j = i+1; this->model.balls.size() > j; j++) {
+                    Ball &b_ball = this->model.balls[j];
+                    a_ball.check_collision_with_balls(b_ball);
+                }
+
             }
         }
 

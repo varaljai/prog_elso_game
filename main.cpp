@@ -47,19 +47,14 @@ private:
     Vec2 position;
     Vec2 velocity;
     float size;
-    bool todo_remove_utkozik;
 
 public:
-    Ball(Vec2 position,Vec2 velocity, float size) : position(position), velocity(velocity), size(size), todo_remove_utkozik(false) {}
+    Ball(Vec2 position,Vec2 velocity, float size) : position(position), velocity(velocity), size(size){}
 
     void draw() {
         gout << move_to(this->position.x - (this->size/ 2.), this->position.y - (this->size / 2.));
         gout << color(49, 116, 143);
-        if (this->todo_remove_utkozik) {
-            gout << color(235, 111, 146);
-        }
         gout << box(this->size, this->size);
-
     }
 
     void update(float dt) {
@@ -71,7 +66,6 @@ public:
         else if (this->position.x - this->size / 2. < 0.) {
             this->velocity.x *= -1.;
             this->position.x = 0. + this->size / 2.;
-
         }
 
         if (this->position.y + this->size / 2. > WINDOW_HEIGHT -1.) {
@@ -85,11 +79,7 @@ public:
     }
     void check_collision_with_balls(Ball &other){
         if (pow(this->size / 2. + other.size / 2.,2) > (this->position - other.position).lenght_squared() ) {
-            //swap(this->velocity,other.velocity);
-            this->todo_remove_utkozik = true;
-            other.todo_remove_utkozik = true;
-            gout << move_to(this->position.x, this->position.y);
-            cout << this->size / 2 + other.size / 2.<< ' ' << (this->position - other.position).lenght_squared() << endl;
+            swap(this->velocity,other.velocity);
         }
 
     }
@@ -104,7 +94,7 @@ struct Model {
             this->balls.push_back(
              Ball(
                  Vec2((float)(rand()%(int)WINDOW_WIDTH),(float)(rand()%(int)WINDOW_HEIGHT)),
-                 Vec2((float)(rand()%60-30),(float)(rand()%60-30)),
+                 Vec2((float)(rand()%120-60),(float)(rand()%120-60)),
                  (float)(rand()%15+5)
              )
          );

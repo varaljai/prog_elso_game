@@ -12,5 +12,10 @@ link_directories(lib)
 target_link_libraries( graphics SDL2 SDL2.dll SDL2main SDL2_ttf SDL2_ttf.dll)
 
 
-add_executable(CLionGraphicsKit main.cpp)
+add_executable(CLionGraphicsKit main.cpp
+        vec2.hpp
+        ball.hpp
+        consts.hpp
+        model.hpp
+        block.hpp)
 target_link_libraries(CLionGraphicsKit graphics)

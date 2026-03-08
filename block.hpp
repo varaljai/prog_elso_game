@@ -3,9 +3,13 @@
 #include "vec2.hpp"
 
 struct Block {
-private:
+protected:
     Vec2 position;
     Vec2 size;
+public:
+    Block(Vec2 position, Vec2 size) : position(position), size(size)  {}
+    virtual void draw() {}
+
 };
 
 

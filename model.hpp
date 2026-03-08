@@ -6,14 +6,16 @@
 #include "ball.hpp"
 #include "vec2.hpp"
 #include "consts.hpp"
+#include "paddle.hpp"
 
 
 using namespace std;
 
 struct Model {
     vector<Ball> balls;
+    Paddle paddle;
 
-    Model() : balls(vector<Ball>()) {
+    Model() : balls(vector<Ball>()), paddle(Paddle()) {
         for (int i = 0; 20 > i; i++ ) {
             this->balls.push_back(
              Ball(
@@ -21,6 +23,7 @@ struct Model {
                  Vec2((float)(rand()%120-60),(float)(rand()%120-60)),
                  (float)(rand()%15+5)
              )
+
          );
         }
     }

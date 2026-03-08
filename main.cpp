@@ -3,10 +3,10 @@
 #include<cmath>
 #include<cstdlib>
 #include<iostream>
-#include "vec2.hpp"
 #include "ball.hpp"
 #include "consts.hpp"
 #include "model.hpp"
+
 
 using namespace genv;
 using namespace std;
@@ -35,18 +35,32 @@ public:
 
     void event(const event &ev) {
         if (ev.type == ev_timer) {
+            float dt = (float)FRAME_TIME /1000.; // TODO: el lehet-e kérni az eltelt időt?
             for (int i=0; this->model.balls.size() > i; i++) {
                 Ball &a_ball = this->model.balls[i];
-                a_ball.update((float)FRAME_TIME /1000.); // TODO: el lehet-e kérni az eltelt időt?
+                a_ball.update(dt);
 
                 for (int j = i+1; this->model.balls.size() > j; j++) {
                     Ball &b_ball = this->model.balls[j];
                     a_ball.check_collision_with_a_ball_and_resolve(b_ball);
-
                 }
+                a_ball.check_collision_with_a_block(this->model.paddle);
             }
-
-
+            this->model.paddle.update(dt);
+        }
+        else if (ev.type == ev_key) {
+            if (ev.keycode == key_left) {
+                this->model.paddle.move_to_left = true;
+            }
+            else if (ev.keycode == -key_left) {
+                this->model.paddle.move_to_left = false;
+            }
+            if (ev.keycode == key_right) {
+                this->model.paddle.move_to_right = true;
+            }
+            else if (ev.keycode == -key_right) {
+                this->model.paddle.move_to_right = false;
+            }
         }
     }
 
@@ -56,6 +70,7 @@ public:
         for (Ball ball : this->model.balls) {
             ball.draw();
         }
+        this->model.paddle.draw();
 
         gout << refresh;
     }

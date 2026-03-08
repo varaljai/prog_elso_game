@@ -3,6 +3,8 @@
 
 #include "graphics.hpp"
 #include "consts.hpp"
+#include "vec2.hpp"
+#include "block.hpp"
 
 using namespace genv;
 
@@ -53,6 +55,8 @@ public:
             this->velocity = this->velocity - impulse;
             other.velocity = other.velocity + impulse;
         }
+    }
+    bool check_collision_with_a_block(const Block &block){
 
     }
 };

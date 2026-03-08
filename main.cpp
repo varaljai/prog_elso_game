@@ -44,7 +44,9 @@ public:
                     Ball &b_ball = this->model.balls[j];
                     a_ball.check_collision_with_a_ball_and_resolve(b_ball);
                 }
-                a_ball.check_collision_with_a_block(this->model.paddle);
+                if (a_ball.check_collision_with_a_block(this->model.paddle)) {
+                    cout << "utkozés volt " << endl;
+                }
             }
             this->model.paddle.update(dt);
         }

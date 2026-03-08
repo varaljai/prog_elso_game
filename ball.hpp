@@ -6,13 +6,24 @@
 #include "vec2.hpp"
 #include "block.hpp"
 
+#include <cmath>
+
 using namespace genv;
+using namespace std;
 
 struct Ball {
 private:
     Vec2 position;
     Vec2 velocity;
     float size;
+
+    Vec2 closest(const Block &block) {
+        return Vec2(
+                max(min(this->position.x, (float)(block.get_position().x + block.get_size().x / 2.)), (float)(block.get_position().x - block.get_size().x / 2.)),
+                max(min(this->position.y, (float)(block.get_position().y + block.get_size().y / 2.)), (float)(block.get_position().y - block.get_size().y / 2.))
+        );
+    }
+
 
 public:
     Ball(Vec2 position,Vec2 velocity, float size) : position(position), velocity(velocity), size(size){}
@@ -57,7 +68,8 @@ public:
         }
     }
     bool check_collision_with_a_block(const Block &block){
-
+        float distance_squared = (this->position - this->closest(block)).lenght_squared();
+        return distance_squared <= pow(this->size / 2.,2);
     }
 };
 

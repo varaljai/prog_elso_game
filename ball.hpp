@@ -17,16 +17,16 @@ private:
     Vec2 velocity;
     float size;
 
-    Vec2 closest(const Block &block) {
+    Vec2 closest(const Block *block) {
         return Vec2(
-                max(min(this->position.x, (float)(block.get_position().x + block.get_size().x / 2.)), (float)(block.get_position().x - block.get_size().x / 2.)),
-                max(min(this->position.y, (float)(block.get_position().y + block.get_size().y / 2.)), (float)(block.get_position().y - block.get_size().y / 2.))
+                max(min(this->position.x, (float)(block->get_position().x + block->get_size().x / 2.)), (float)(block->get_position().x - block->get_size().x / 2.)),
+                max(min(this->position.y, (float)(block->get_position().y + block->get_size().y / 2.)), (float)(block->get_position().y - block->get_size().y / 2.))
         );
     }
 
 
 public:
-    Ball(Vec2 position,Vec2 velocity, float size) : position(position), velocity(velocity), size(size){}
+    Ball(Vec2 ball_position,Vec2 ball_velocity, float ball_size) : position(ball_position), velocity(ball_velocity), size(ball_size){}
 
     void draw() {
         gout << move_to(this->position.x - (this->size/ 2.), this->position.y - (this->size / 2.));
@@ -67,9 +67,23 @@ public:
             other.velocity = other.velocity + impulse;
         }
     }
-    bool check_collision_with_a_block(const Block &block){
-        float distance_squared = (this->position - this->closest(block)).lenght_squared();
-        return distance_squared <= pow(this->size / 2.,2);
+    bool check_collision_with_a_block(const Block *block){
+        Vec2 closest_point = this->closest(block);
+        Vec2 diff = this->position - closest_point;
+        float distance_squared = diff.lenght_squared();
+        return distance_squared <= pow(this->size / 2., 2);
+    }
+
+    void paddled(Vec2 paddle_pos) {
+        Vec2 direction = (this->position - paddle_pos).normalize();
+        this->velocity = direction * this->velocity.lenght();
+    }
+
+    void block_hit(Block *block) {
+        Vec2 closest_point = this->closest(block);
+        Vec2 normal = (this->position - closest_point).normalize();
+        float dot = this->velocity.dot(normal);
+        this->velocity = this->velocity - normal * (dot * 2.);
     }
 };
 

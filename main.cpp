@@ -44,11 +44,29 @@ public:
                     Ball &b_ball = this->model.balls[j];
                     a_ball.check_collision_with_a_ball_and_resolve(b_ball);
                 }
-                if (a_ball.check_collision_with_a_block(this->model.paddle)) {
-                    cout << "utkozés volt " << endl;
+                if (a_ball.check_collision_with_a_block(&this->model.paddle)) {
+                    Vec2 paddle_pos = this->model.paddle.get_position();
+                    paddle_pos.y += PADDLE_WIDTH / 2.;
+                    a_ball.paddled(paddle_pos);
+                }
+                for (int j = 0; this->model.blocks.size() > j; j++) {
+                    Block *block = this->model.blocks[j];
+                    if (a_ball.check_collision_with_a_block(block)) {
+                        block->hit();
+                        a_ball.block_hit(block);
+                    }
                 }
             }
             this->model.paddle.update(dt);
+            for (auto it = this->model.blocks.begin(); it != this->model.blocks.end(); ) {
+                if ((*it)->get_is_marked_for_remove()) {
+                    delete *it;
+                    it = this->model.blocks.erase(it);
+                } else {
+                    ++it;
+                }
+            }
+
         }
         else if (ev.type == ev_key) {
             if (ev.keycode == key_left) {
@@ -73,6 +91,9 @@ public:
             ball.draw();
         }
         this->model.paddle.draw();
+        for (Block *block : this->model.blocks) {
+            block->draw();
+        }
 
         gout << refresh;
     }

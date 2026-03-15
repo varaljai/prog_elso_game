@@ -6,9 +6,11 @@ struct Block {
 protected:
     Vec2 position;
     Vec2 size;
+    bool is_marked_for_remove;
 public:
-    Block(Vec2 position, Vec2 size) : position(position), size(size)  {}
+    Block(Vec2 block_position, Vec2 block_size) : position(block_position), size(block_size), is_marked_for_remove(false) {}
     virtual void draw() {}
+    virtual void hit() {}
 
     Vec2 get_position() const {
         return this->position;
@@ -17,6 +19,11 @@ public:
     Vec2 get_size() const {
         return this->size;
     }
+
+    bool get_is_marked_for_remove() const {
+        return this->is_marked_for_remove;
+    }
+
 
 };
 

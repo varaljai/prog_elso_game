@@ -18,5 +18,6 @@ add_executable(CLionGraphicsKit main.cpp
         consts.hpp
         model.hpp
         block.hpp
-        paddle.hpp)
+        paddle.hpp
+        normal_block.hpp)
 target_link_libraries(CLionGraphicsKit graphics)

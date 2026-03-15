@@ -24,6 +24,8 @@ public:
         gout << box(this->size.x, this->size.y);
     }
 
+    virtual void hit() {}
+
     void update(float dt) {
         if (move_to_left) {
             this->position.x -= this->speed * dt;

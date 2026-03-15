@@ -19,5 +19,8 @@ add_executable(CLionGraphicsKit main.cpp
         model.hpp
         block.hpp
         paddle.hpp
-        normal_block.hpp)
+        normal_block.hpp
+        ball_spawner_block.hpp
+        block_action.hpp
+        strong_block.hpp)
 target_link_libraries(CLionGraphicsKit graphics)

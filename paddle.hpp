@@ -18,13 +18,15 @@ public:
         move_to_right(false),
         speed(DEFAULT_PADDLE_SPEED) {}
 
-    virtual void draw() {
+    virtual void draw() override {
         gout << move_to(this->position.x - (this->size.x / 2.), this->position.y - (this->size.y / 2.));
         gout << color(49, 116, 143);
         gout << box(this->size.x, this->size.y);
     }
 
-    virtual void hit() {}
+    virtual BlockAction hit() override {
+        return DoNothing;
+    }
 
     void update(float dt) {
         if (move_to_left) {

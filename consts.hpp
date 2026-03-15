@@ -9,6 +9,14 @@ const float PADDLE_HEIGHT = 10.;
 const float DEFAULT_PADDLE_SPEED = 600.;
 const float BLOCK_WIDTH = 60.;
 const float BLOCK_HEIGHT = 30.;
+const float BALL_MAX_VELOCITY = 500.;
+const float BALL_MIN_VELOCITY = 250.;
+const float PAD_BETWEEN_BLOCKS = 2.;
+const float BALL_MAX_SIZE = 20;
+const float BALL_MIN_SIZE = 10;
+
+
+
 
 
 #endif // CONSTS_HPP_GUARD

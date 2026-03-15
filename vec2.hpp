@@ -24,16 +24,16 @@ public:
         return Vec2(this->x / other, this->y / other);
     }
 
-    float lenght_squared() {
+    float length_squared() {
         return this->x*this->x + this->y*this->y;
     }
 
-    float lenght() {
-        return sqrt(this->lenght_squared());
+    float length() {
+        return sqrt(this->length_squared());
     }
 
     Vec2 normalize() {
-        return *this / this->lenght();
+        return *this / this->length();
     }
 
     float dot(const Vec2 &other) {

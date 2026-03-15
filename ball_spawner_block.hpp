@@ -1,27 +1,28 @@
-#ifndef NORMAL_BLOCK_HPP_GUARD
-#define NORMAL_BLOCK_HPP_GUARD
+#ifndef BALL_SPAWNER_BLOCK_HPP_GUARD
+#define BALL_SPAWNER_BLOCK_HPP_GUARD
 #include "block.hpp"
 #include "consts.hpp"
 #include "vec2.hpp"
 #include "graphics.hpp"
+#include "block_action.hpp"
 
 using namespace genv;
 
-struct NormalBlock : public Block {
+struct BallSpawnerBlock : public Block {
 public:
-    NormalBlock(Vec2 posison) : Block(posison, Vec2(BLOCK_WIDTH,BLOCK_HEIGHT)){}
+    BallSpawnerBlock(Vec2 posison) : Block(posison, Vec2(BLOCK_WIDTH,BLOCK_HEIGHT)){}
 
     virtual void draw() override {
         gout << move_to(this->position.x - (this->size.x / 2.), this->position.y - (this->size.y / 2.));
-        gout << color(235, 188, 186);
+        gout << color(235, 111, 146);
         gout << box(this->size.x, this->size.y);
     }
 
     virtual BlockAction hit() override {
         is_marked_for_remove = true;
-        return DoNothing;
+        return SpawnBall;
     }
 
 };
 
-#endif // NORMAL_BLOCK_HPP_GUARD
+#endif // BALL_SPAWNER_BLOCK_HPP_GUARD

@@ -1,5 +1,6 @@
 #ifndef BLOCK_HPP_GUARD
 #define BLOCK_HPP_GUARD
+#include "block_action.hpp"
 #include "vec2.hpp"
 
 struct Block {
@@ -10,7 +11,7 @@ protected:
 public:
     Block(Vec2 block_position, Vec2 block_size) : position(block_position), size(block_size), is_marked_for_remove(false) {}
     virtual void draw() {}
-    virtual void hit() {}
+    virtual BlockAction hit() {}
 
     Vec2 get_position() const {
         return this->position;

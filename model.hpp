@@ -44,7 +44,7 @@ struct Model {
     }
     ~Model() {
         while (this->blocks.size() > 0 ) {
-            delete this->blocks[this->blocks.size()-1];
+            //delete this->blocks[this->blocks.size() -1];
             this->blocks.pop_back();
         }
     }

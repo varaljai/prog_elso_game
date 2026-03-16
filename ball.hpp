@@ -19,11 +19,11 @@ private:
     bool is_marked_for_remove;
 
     Vec2 closest(const Block* block) const {
-        const Vec2  pos      = block->get_position();
-        const Vec2  half     = block->get_size() * 0.5f;
+        const Vec2 pos = block->get_position();
+        const Vec2 half = block->get_size() * 0.5;
         return Vec2(
-            std::max(pos.x - half.x, std::min(this->position.x, pos.x + half.x)),
-            std::max(pos.y - half.y, std::min(this->position.y, pos.y + half.y))
+            max(pos.x - half.x, min(this->position.x, pos.x + half.x)),
+            max(pos.y - half.y, min(this->position.y, pos.y + half.y))
         );
     }
 
@@ -31,7 +31,7 @@ private:
 public:
     Ball(Vec2 ball_position,Vec2 ball_velocity, float ball_size) : position(ball_position), velocity(ball_velocity), size(ball_size), is_marked_for_remove(false){}
     Ball(Vec2 ball_position) : position(ball_position),
-        velocity(Vec2(0, -1.) * ((float)( rand()%(int)(BALL_MAX_VELOCITY - BALL_MIN_VELOCITY) ) + BALL_MIN_VELOCITY)),
+        velocity(Vec2(0.1, -1.) * ((float)( rand()%(int)(BALL_MAX_VELOCITY - BALL_MIN_VELOCITY) ) + BALL_MIN_VELOCITY)),
         size((float)( rand()%(int)(BALL_MAX_SIZE - BALL_MIN_SIZE) ) + BALL_MIN_SIZE),
         is_marked_for_remove(false) {
         this->position.y -= this->size;
